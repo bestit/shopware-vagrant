@@ -8,9 +8,5 @@
             "name": "best it AG",
             "email": "info@bestit.de"
         }
-    ],
-    "require": {
-        "symfony/console": "^5.1"
-    },
-    "bin": ["bin/vagrant"]
+    ]
 }

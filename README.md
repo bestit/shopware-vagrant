@@ -20,6 +20,70 @@ Virtualbox and Vagrant (min. Version 2.0) have to be installed on your local mac
 Clone the repository to your local machine.
 
     $ composer require --dev best-it/shopware-vagrant
+    
+Generate a Vagrantfile that looks like this and modify it to your needs:
+```
+shopware_vagrant = File.expand_path('./vendor/best-it/shopware-vagrant/Vagrantfile')
+load shopware_vagrant
+
+confDir = $confDir ||= File.expand_path(File.dirname(__FILE__))
+afterScriptPath = confDir + "/after.sh"
+customizationScriptPath = confDir + "/user-customizations.sh"
+
+Vagrant.configure("2") do |config|
+
+    config.vm.synced_folder "./shopware", "/home/vagrant/www",
+        type: "rsync",
+        rsync__exclude: [
+            "/.env",
+            "/engine/Library",
+            "/var/*",
+            "/web/*",
+            "/media/.htaccess",
+            "/.htaccess",
+            "/themes/Backend",
+            "/themes/Frontend/Bare",
+            "/themes/Frontend/Responsive",
+            "/themes/Frontend/Session/node_modules",
+            "/Plugins/Local/Backend/SwagImportExport/psh",
+            "/custom/plugins/SwagPaymentPayPalUnified/psh"
+        ]
+
+    config.ssh.forward_agent = true
+
+    if File.exist? afterScriptPath then
+        config.vm.provision "shell", path: afterScriptPath, privileged: false, keep_color: true
+    end
+
+    if File.exist? customizationScriptPath then
+        config.vm.provision "shell", path: customizationScriptPath, privileged: false, keep_color: true
+    end
+end
+
+userVagrantfilePath = confDir + "/user-vagrantfile"
+load userVagrantfilePath if File.exists?(userVagrantfilePath)
+```
+
+Generate an ansible folder
+
+    $ mkdir ansible
+
+Add a playbook that looks like this:
+```
+---
+- name: apply common configuration to all nodes
+  hosts: all
+  roles:
+    - role: '../vendor/best-it/shopware-vagrant/ansible/roles/common'
+    - role: '../vendor/best-it/shopware-vagrant/ansible/roles/apache'
+    - role: '../vendor/best-it/shopware-vagrant/ansible/roles/mysql'
+    - role: '../vendor/best-it/shopware-vagrant/ansible/roles/adminer'
+    - role: '../vendor/best-it/shopware-vagrant/ansible/roles/ioncube'
+    - role: '../vendor/best-it/shopware-vagrant/ansible/roles/composer'
+    - role: '../vendor/best-it/shopware-vagrant/ansible/roles/nodejs'
+    - role: '../vendor/best-it/shopware-vagrant/ansible/roles/sw-cli-tools'
+    - role: '../vendor/best-it/shopware-vagrant/ansible/roles/grunt'
+```
 
 ### Without composer
 
