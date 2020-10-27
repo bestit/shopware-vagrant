@@ -1,0 +1,13 @@
+{
+    "name": "best-it/shopware-vagrant",
+    "description": "Vagrant setup mainly used for shopware (5)",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "best it AG",
+            "email": "info@bestit.de"
+        }
+    ],
+    "require": {}
+}
