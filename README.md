@@ -15,6 +15,14 @@ Virtualbox and Vagrant (min. Version 2.0) have to be installed on your local mac
     
 ## Usage
 
+### Composer
+
+Clone the repository to your local machine.
+
+    $ composer require --dev best-it/shopware-vagrant
+
+### Without composer
+
 Clone the repository to your local machine.
 
     $ git clone https://github.com/shopwareLabs/shopware-vagrant

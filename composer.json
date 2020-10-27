@@ -9,5 +9,8 @@
             "email": "info@bestit.de"
         }
     ],
-    "require": {}
+    "require": {
+        "symfony/console": "^5.1"
+    },
+    "bin": ["bin/vagrant"]
 }
