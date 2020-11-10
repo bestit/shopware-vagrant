@@ -97,6 +97,14 @@
     - apache-restart
   become: yes
 
+- name: Push default mutex configuration template
+  template:
+    src=default_mutex.conf.j2
+    dest=/etc/apache2/conf-available/default-mutex.conf
+  notify:
+    - apache-restart
+  become: yes
+
 - name: Create ssl directory
   file: path=/etc/apache2/ssl state=directory group={{ apache_group }} owner={{ apache_user }}
   become: yes
@@ -139,4 +147,14 @@
 - name: be sure apache is started and enabled
   service: name=apache2 state=started enabled=yes
   become: yes
+
+- name: Apache | Enable additional configuration
+  command: a2enconf {{ item }}
+  args:
+    creates: /etc/apache2/conf-enabled/{{ item }}.conf
+  with_items:
+    - default-mutex
+  become: yes
+  notify:
+    - apache-reload
 
